@@ -1,0 +1,6 @@
+{
+    "terminal.integrated.env.linux": {
+        "PATH": "/home/liel/.platformio/penv/bin:/home/liel/.platformio/penv:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/var/lib/snapd/snap/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/liel/Android/Sdk/tools:/home/liel/Android/Sdk/platform-tools",
+        "PLATFORMIO_CALLER": "vscode"
+    }
+}
