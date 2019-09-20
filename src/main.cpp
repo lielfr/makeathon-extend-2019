@@ -7,7 +7,7 @@
 #define ECHO_PIN 9
 #define LED_PIN 7
 #define LED_COUNT 27
-#define MAX_DISTANCE 15
+#define MAX_DISTANCE 10
 #define DELAY 200
 #define SENSOR_COUNT 4
 
@@ -26,7 +26,7 @@ int SET_GROUP[] = {0, 0, 0};
 
 void setup() {
   // put your setup code here, to run once:
-  // Serial.begin(9600);
+  Serial.begin(9600);
   // for (int i = 0; i < 4; ++i) {
   //   sensors[i] = NewPing(TRIGGER_PINS[i], ECHO_PINS[i], MAX_DISTANCE);
   // }
@@ -99,12 +99,13 @@ void loop() {
   // activateStrips();
   
   for (int i = 0; i < SENSOR_COUNT; ++i) {
-    // Serial.print("Distance ");
-    // Serial.print(i);
-    // Serial.print(": ");
-    // Serial.print(sensors[i].ping_cm());
-    // Serial.print("\n");
+    
     if (sensors[i].ping_cm() > 0) {
+      Serial.print("Distance ");
+    Serial.print(i);
+    Serial.print(": ");
+    Serial.print(sensors[i].ping_cm());
+    Serial.print("\n");
       activateStrips();
       j = 1;
     }
