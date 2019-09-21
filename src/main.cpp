@@ -7,7 +7,7 @@
 #define ECHO_PIN 9
 #define LED_PIN 7
 #define LED_COUNT 36
-#define MAX_DISTANCE 7
+#define MAX_DISTANCE 15
 #define DELAY 200
 #define SENSOR_COUNT 4
 #define DELAY_LIGHTS 2000
