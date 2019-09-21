@@ -6,10 +6,11 @@
 #define TRIGGER_PIN 8
 #define ECHO_PIN 9
 #define LED_PIN 7
-#define LED_COUNT 27
-#define MAX_DISTANCE 10
+#define LED_COUNT 36
+#define MAX_DISTANCE 7
 #define DELAY 200
 #define SENSOR_COUNT 4
+#define DELAY_LIGHTS 2000
 
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 // NewPing sensors[4];
@@ -22,7 +23,7 @@ NewPing sensors[4] = {
   NewPing(5, 13, MAX_DISTANCE)
 };
 
-int SET_GROUP[] = {0, 0, 0};
+bool SET_GROUP[] = {false, false, false, false};
 
 void setup() {
   // put your setup code here, to run once:
@@ -34,35 +35,18 @@ void setup() {
   strip.show();
 }
 
-void ledBlink() {
-  digitalWrite(LED_PIN, HIGH);
-  // delayMicroseconds(500000);
-  digitalWrite(LED_PIN, LOW);
-  // delayMicroseconds(500000);
-}
 
-void disco() {
-  for (int i = 0; i < LED_COUNT; ++i) {
-    if (i > 0)
-      strip.setPixelColor(i - 1, 0, 0, 0);
-    strip.setPixelColor(i, 255, 0, 0);
-    strip.show();
-    delayMicroseconds(5000);
-  }
-
-  strip.setPixelColor(26, 0, 0, 0);
-  strip.show();
-}
 
 void updateLeds() {
   for (int i = 0; i < LED_COUNT; ++i) {
     if (i < 9)
-      strip.setPixelColor(i, SET_GROUP[0], 0, 0);
+      strip.setPixelColor(i, SET_GROUP[0]?255:0, 0, 0);
     else if (i < 18)
-      strip.setPixelColor(i, SET_GROUP[1], 0, 0);
-    else
-    {
-      strip.setPixelColor(i, SET_GROUP[2], 0, 0);
+      strip.setPixelColor(i, SET_GROUP[1]?255:0, 0, 0);
+    else if (i < 27)
+      strip.setPixelColor(i, SET_GROUP[2]?255:0, 0, 0);
+    else {
+      strip.setPixelColor(i, SET_GROUP[3]?255:0, 0, 0);
     }
     
     strip.show();
@@ -70,47 +54,60 @@ void updateLeds() {
 }
 
 void activateStrips() {
-  SET_GROUP[0] = 0;
-  SET_GROUP[2] = 255;
+  SET_GROUP[0] = false;
+  SET_GROUP[3] = true;
   updateLeds();
   delay(DELAY);
-  SET_GROUP[1] = 255;
-  SET_GROUP[2] = 0;
+  SET_GROUP[3] = false;
+  SET_GROUP[2] = true;
   updateLeds();
   delay(DELAY);
-  SET_GROUP[0] = 255;
-  SET_GROUP[1] = 0;
+  SET_GROUP[1] = true;
+  SET_GROUP[2] = false;
+  updateLeds();
+  delay(DELAY);
+  SET_GROUP[0] = true;
+  SET_GROUP[1] = false;
   updateLeds();
   delay(DELAY);
 }
 
 void closeStrips() {
-  SET_GROUP[0] = 0;
-  SET_GROUP[1] = 0;
-  SET_GROUP[2] = 0;
+  SET_GROUP[0] = false;
+  SET_GROUP[1] = false;
+  SET_GROUP[2] = false;
   updateLeds();
 }
 
 void loop() {
   long distance;
-  int j = 0;
+  bool j = false;
   delayMicroseconds(20);
   
   // activateStrips();
   
   for (int i = 0; i < SENSOR_COUNT; ++i) {
-    
-    if (sensors[i].ping_cm() > 0) {
-      Serial.print("Distance ");
-    Serial.print(i);
-    Serial.print(": ");
-    Serial.print(sensors[i].ping_cm());
-    Serial.print("\n");
-      activateStrips();
-      j = 1;
+    distance = sensors[i].ping_cm();
+    if (distance > 0) {
+      delay(50);
+      distance = sensors[i].ping_cm();
+      if (distance > 0) {
+        activateStrips();
+        j = true;
+        // delay(DELAY_LIGHTS);
+        break;
+      }
+    //   Serial.print("Distance ");
+    // Serial.print(i);
+    // Serial.print(": ");
+    // Serial.print(distance);
+    // Serial.print("\n");
+      
     }
   }
 
-  if (!j) closeStrips();
+  if (!j)  {
+    closeStrips();
+  }
 }
 
